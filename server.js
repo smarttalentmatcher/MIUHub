@@ -155,6 +155,11 @@ app.get('/', (req, res) => {
 // 서버 시작
 app.listen(PORT, () => {
     console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+    console.log('=== 서버 시작 시 환경 변수 확인 ===');
+    console.log('SUPABASE_URL:', SUPABASE_URL || '미설정');
+    console.log('SUPABASE_SERVICE_KEY:', SUPABASE_SERVICE_KEY ? `설정됨 (길이: ${SUPABASE_SERVICE_KEY.length})` : '미설정');
+    console.log('supabaseAdmin 초기화:', supabaseAdmin ? '성공' : '실패');
+    console.log('================================');
 });
 
 
