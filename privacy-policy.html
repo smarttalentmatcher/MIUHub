@@ -14,7 +14,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: var(--primary-color, #3b3c36);
+            background-color: var(--primary-color);
             padding: 0;
             margin: 0;
         }
@@ -33,7 +33,7 @@
         .header h1 {
             font-size: 20px;
             font-weight: bold;
-            color: var(--primary-color, #3b3c36);
+            color: var(--primary-color);
             margin: 0;
         }
         .close-btn {
@@ -59,7 +59,7 @@
         .section h2 {
             font-size: 18px;
             font-weight: bold;
-            color: var(--primary-color, #3b3c36);
+            color: var(--primary-color);
             margin-bottom: 16px;
         }
         .section p {
@@ -92,7 +92,7 @@
         <div class="header">
             <h1>개인정보 처리방침</h1>
             <div style="display: flex; gap: 16px; align-items: center;">
-                <a href="/terms-of-service.html" style="color: var(--primary-color, #000000); text-decoration: none; font-size: 14px;">이용약관</a>
+                <a href="/terms-of-service.html" style="color: var(--primary-color); text-decoration: none; font-size: 14px;">이용약관</a>
                 <button class="close-btn" onclick="window.history.back()">✕</button>
             </div>
         </div>
@@ -164,8 +164,35 @@
             day: 'numeric'
         });
         
-        // 검정색으로 설정
-        document.documentElement.style.setProperty('--primary-color', '#000000');
+        // Supabase app_config에서 색상 값 가져오기
+        async function loadColorConfig() {
+            try {
+                const response = await fetch('/api/config');
+                const result = await response.json();
+                
+                if (result.success && result.config) {
+                    // 다양한 키 이름 시도 (miuhub_primary_color, primary_color, primaryColor 등)
+                    const primaryColor = result.config.miuhub_primary_color || 
+                                       result.config.primary_color || 
+                                       result.config.primaryColor ||
+                                       result.config.color;
+                    
+                    if (primaryColor) {
+                        // CSS 변수에 색상 적용
+                        document.documentElement.style.setProperty('--primary-color', primaryColor);
+                    } else {
+                        console.warn('색상 설정을 찾을 수 없습니다. app_config 테이블에 색상 값을 설정해주세요.');
+                    }
+                } else {
+                    console.warn('설정을 불러올 수 없습니다. app_config 테이블에 색상 값을 설정해주세요.');
+                }
+            } catch (error) {
+                console.error('색상 설정 로드 실패:', error);
+            }
+        }
+        
+        // 페이지 로드 시 색상 설정 로드
+        loadColorConfig();
     </script>
 </body>
 </html>

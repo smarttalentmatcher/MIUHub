@@ -70,6 +70,48 @@ app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, 'reset-password.html'));
 });
 
+// App Config 조회 API (Supabase app_config 테이블에서 색상 값 조회)
+app.get('/api/config', async (req, res) => {
+    try {
+        if (supabaseAdmin) {
+            try {
+                // app_config 테이블에서 모든 설정 가져오기
+                const { data, error } = await supabaseAdmin
+                    .from('app_config')
+                    .select('key, value');
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (data && data.length > 0) {
+                    // config 객체 생성
+                    const config = {};
+                    data.forEach(row => {
+                        config[row.key] = row.value;
+                    });
+                    
+                    return res.json({
+                        success: true,
+                        config: config
+                    });
+                }
+            } catch (supabaseError) {
+                console.error('Supabase config 조회 오류:', supabaseError);
+                // 에러가 발생해도 빈 config 반환 (서버가 계속 작동하도록)
+            }
+        }
+        
+        return res.json({
+            success: true,
+            config: {}
+        });
+    } catch (error) {
+        console.error('Config 조회 오류:', error);
+        res.status(500).json({ error: '서버 오류가 발생했습니다.', message: error.message });
+    }
+});
+
 // 비밀번호 재설정 API (Supabase Admin API 사용)
 app.post('/api/auth/reset-password', async (req, res) => {
     try {
