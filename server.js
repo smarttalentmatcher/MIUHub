@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
 // Supabase 설정
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qgtwkhkmdsaypnsnrpbf.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://waumfxamhuvhsblehsuf.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY; // Service Role Key 필요
 
 // 환경 변수 디버깅 (Railway에서 확인용)
@@ -204,7 +204,7 @@ app.get('/', (req, res) => {
 });
 
 // 서버 시작
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
     console.log('=== 서버 시작 시 환경 변수 확인 ===');
     console.log('SUPABASE_URL:', SUPABASE_URL || '미설정');
